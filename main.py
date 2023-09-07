@@ -1,7 +1,8 @@
 import ttkbootstrap as ttk
 from tkinter import filedialog
-from PIL import Image, ImageTk, ImageEnhance, ImageOps
+from PIL import Image, ImageTk, ImageEnhance, ImageOps, ImageGrab
 from tkinter import colorchooser
+from tkinter.messagebox import askyesno
 
 
 root = ttk.Window(themename="cosmo")
@@ -11,6 +12,7 @@ root.resizable(1, 1)
 
 Width = 750
 Height = 650
+rotation_angle =0
 pen_size = 2
 pen_color = "blue"
 
@@ -55,9 +57,26 @@ def open_image():
 open_image_button = ttk.Button(top_frame, image=open_image_icon, bootstyle="light", command=open_image)
 open_image_button.pack(pady=5, side ="left")
 
+rotate_icon = ttk.PhotoImage(file = 'rotate_icon.png').subsample(8, 8)
+def rotate():
+    global image, photo_image, rotation_angle
+    image = Image.open(file_path)
+    rotated_image = image.rotate(rotation_angle + 90)
+    rotation_angle += 90
+    if rotation_angle % 360 == 0:
+        rotation_angle = 0
+        image = Image.open(file_path)
+        rotated_image = image
+    photo_image = ImageTk.PhotoImage(rotated_image)
+    canvas.create_image(0, 0, anchor="nw", image=photo_image)
+
+
+rotate_button = ttk.Button(right_frame, image=rotate_icon, bootstyle="light", command=rotate)
+rotate_button.pack(pady=5)
+
 def add_filter(filter):
     global image, photo_image
-    image = Image.open(file_path)
+    image = Image.open(file_path).rotate(rotation_angle)
     if filter == "None":
         image = image
     elif filter == "Black and white":
@@ -77,7 +96,7 @@ def change_color():
     pen_color = colorchooser.askcolor(title="Select Pen Color")[1]
 
 
-drawing_icon = ttk.PhotoImage(file ='drawing_icon.png').subsample(12, 12)
+drawing_icon = ttk.PhotoImage(file ='drawing_icon.png').subsample(8, 8)
 drawing_button = ttk.Button(right_frame, image=drawing_icon, bootstyle="light", command=change_color)
 drawing_button.pack(pady=5)
 
@@ -97,10 +116,33 @@ def erase_lines():
     if file_path:
         canvas.delete("oval")
 
-erase_icon = ttk.PhotoImage(file = 'erase_icon.png').subsample(12, 12)
+erase_icon = ttk.PhotoImage(file = 'erase_icon.png').subsample(8, 8)
 erase_button = ttk.Button(right_frame, image=erase_icon, bootstyle="light", command = erase_lines)
 erase_button.pack(pady=5)
 
+def save_image():
+    global file_path, rotation_angle
+    if file_path:
+        image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(), canvas.winfo_rooty() + canvas.winfo_height()))
+        # if rotation_angle % 360 != 0:
+            #image = image.rotate(rotation_angle)
+        filter = filter_combobox.get()
+        if filter == "None":
+            image = image
+        elif filter == "Black and white":
+            image = ImageOps.grayscale(image)
+        elif filter == "Colorful":
+            image = ImageEnhance.Contrast(image).enhance(1.7)
+        elif filter == "Brightness":
+            image = ImageEnhance.Brightness(image).enhance(1.7)
+        file_path = file_path.split(".")[0] + "_new.jpg"
+        file_path = filedialog.asksaveasfilename(defaultextension=".jpg")
+        image.save(file_path)
+
+
+save_icon = ttk.PhotoImage(file = 'save_icon.png').subsample(8,8)
+save_button = ttk.Button(right_frame, image=save_icon, bootstyle="light", command=save_image)
+save_button.pack(pady=5)
 
 root.mainloop()
 
