@@ -3,6 +3,8 @@ from tkinter import filedialog
 from PIL import Image, ImageTk, ImageEnhance, ImageOps, ImageGrab
 from tkinter import colorchooser
 from tkinter.messagebox import askyesno
+import pygame
+import pygame.camera
 
 
 root = ttk.Window(themename="cosmo")
@@ -28,17 +30,14 @@ right_frame.pack(side="right", fill="y")
 canvas = ttk.Canvas(root, width=Width, height=Height)
 canvas.pack()
 
-image_filters = ["None","Black and white", "Colorful", "Brightness"]
+image_filters = ["None", "Black and white", "Colorful", "Brightness"]
 filter_combobox = ttk.Combobox(top_frame, values=image_filters, width=15)
-filter_combobox.pack(padx=10, pady=5, side = "right")
+filter_combobox.pack(padx=10, pady=5, side="right")
 filter_label = ttk.Label(top_frame, text="Select Filter:", background="white")
-filter_label.pack(padx=10, pady=2, side = "right")
+filter_label.pack(padx=10, pady=2, side="right")
 
-
-
-
-open_image_icon = ttk.PhotoImage(file ='add_image_icon.png').subsample(8, 8)
-
+open_image = (Image.open('add_image_icon.png').resize((1022, 800))).save('add_image_icon_resize.png')
+open_image_icon = ttk.PhotoImage(file='add_image_icon_resize.png').subsample(8, 8)
 
 def open_image():
     global file_path
@@ -55,9 +54,10 @@ def open_image():
 
 
 open_image_button = ttk.Button(top_frame, image=open_image_icon, bootstyle="light", command=open_image)
-open_image_button.pack(pady=5, side ="left")
+open_image_button.pack(pady=5, side='left')
 
-rotate_icon = ttk.PhotoImage(file = 'rotate_icon.png').subsample(8, 8)
+rotating = (Image.open('rotate_icon.png').resize((800, 800))).save('rotate_icon_resize.png')
+rotate_icon = ttk.PhotoImage(file='rotate_icon_resize.png').subsample(8, 8)
 def rotate():
     global image, photo_image, rotation_angle
     image = Image.open(file_path)
@@ -95,8 +95,8 @@ def change_color():
     global pen_color
     pen_color = colorchooser.askcolor(title="Select Pen Color")[1]
 
-
-drawing_icon = ttk.PhotoImage(file ='drawing_icon.png').subsample(8, 8)
+drawing = (Image.open('drawing_icon.png').resize((800, 800))).save('drawing_icon_resize.png')
+drawing_icon = ttk.PhotoImage(file ='drawing_icon_resize.png').subsample(8, 8)
 drawing_button = ttk.Button(right_frame, image=drawing_icon, bootstyle="light", command=change_color)
 drawing_button.pack(pady=5)
 
@@ -116,7 +116,8 @@ def erase_lines():
     if file_path:
         canvas.delete("oval")
 
-erase_icon = ttk.PhotoImage(file = 'erase_icon.png').subsample(8, 8)
+erase = (Image.open('erase_icon.png').resize((800, 800))).save('erase_icon_resize.png')
+erase_icon = ttk.PhotoImage(file = 'erase_icon_resize.png').subsample(8, 8)
 erase_button = ttk.Button(right_frame, image=erase_icon, bootstyle="light", command = erase_lines)
 erase_button.pack(pady=5)
 
@@ -140,9 +141,33 @@ def save_image():
         image.save(file_path)
 
 
-save_icon = ttk.PhotoImage(file = 'save_icon.png').subsample(8,8)
+saving = (Image.open('save_icon.png').resize((800, 800))).save('save_icon_resize.png')
+save_icon = ttk.PhotoImage(file = 'save_icon_resize.png').subsample(8,8)
 save_button = ttk.Button(right_frame, image=save_icon, bootstyle="light", command=save_image)
 save_button.pack(pady=5)
+
+def camera():
+    global image, file_path
+    pygame.camera.init()
+    camlist = pygame.camera.list_cameras()
+    if camlist:
+        cam = pygame.camera.Camera(camlist[0], (640, 480))
+        cam.start()
+        photo = cam.get_image()
+        pygame.image.save(photo, 'your_photo.jpg')
+        cam.stop()
+    else:
+        print("Camera is not detected")
+    file_path='your_photo.jpg'
+    image = Image.open('your_photo.jpg')
+    image = ImageTk.PhotoImage(image)
+    canvas.create_image(0, 0, anchor="nw", image=image)
+
+photo_img = (Image.open('photo_icon.png').resize((1022, 800))).save('photo_icon_resize.png')
+photo_icon = ttk.PhotoImage(file='photo_icon_resize.png').subsample(8, 8)
+photo_button = ttk.Button(top_frame, image=photo_icon, bootstyle="light", command=camera)
+photo_button.pack(pady=5, side='right')
+
 
 root.mainloop()
 
