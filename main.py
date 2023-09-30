@@ -13,7 +13,7 @@ root.geometry("600x620")
 root.resizable(1, 1)
 
 Width = 750
-Height = 650
+Height = 700
 rotation_angle =0
 pen_size = 2
 pen_color = "blue"
@@ -35,6 +35,43 @@ filter_combobox = ttk.Combobox(top_frame, values=image_filters, width=15)
 filter_combobox.pack(padx=10, pady=5, side="right")
 filter_label = ttk.Label(top_frame, text="Select Filter:", background="white")
 filter_label.pack(padx=10, pady=2, side="right")
+
+
+def scaler(event):
+    global file_path, rotation_angle
+    image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(),
+    canvas.winfo_rooty() + canvas.winfo_height()))
+    image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
+
+colorful_scale = ttk.Scale(right_frame, bootstyle="info", length=150, orient="horizontal", from_=0, to=20,command=scaler)
+colorful_scale.pack(padx=10, pady=5, side="right")
+colorful_scale_label=ttk.Label(right_frame, text="Colorful")
+colorful_scale_label.pack(padx=10, pady=5, side="right")
+
+
+################################################ Slider
+# from tkinter import *
+#
+# def colorful():
+#     global image, photo_image
+#     image = Image.open(file_path).rotate(rotation_angle)
+#     image = ImageEnhance.Contrast(image).enhance(colorful_slider.get())
+#
+#
+# root = Tk()
+# colorful_slider = Scale(root, from_=0, to=42, tickinterval=8)
+# colorful_slider.set(19)
+# colorful_slider.pack()
+
+
+
+
+
+
+
+######################################################
+
+
 
 open_image = (Image.open('add_image_icon.png').resize((1022, 800))).save('add_image_icon_resize.png')
 open_image_icon = ttk.PhotoImage(file='add_image_icon_resize.png').subsample(8, 8)
