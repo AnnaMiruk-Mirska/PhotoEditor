@@ -38,16 +38,35 @@ filter_label.pack(padx=10, pady=2, side="right")
 
 
 def scaler(event):
-    global file_path, rotation_angle
-    image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(),
-    canvas.winfo_rooty() + canvas.winfo_height()))
+    #global file_path, rotation_angle
+    # image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(), canvas.winfo_rooty() + canvas.winfo_height()))
+    # image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
+    global image, photo_image
+    image = Image.open(file_path).rotate(rotation_angle)
     image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
+    photo_image = ImageTk.PhotoImage(image)
+    canvas.create_image(0, 0, anchor="nw", image=photo_image)
 
 colorful_scale = ttk.Scale(right_frame, bootstyle="info", length=150, orient="horizontal", from_=0, to=20,command=scaler)
-colorful_scale.pack(padx=10, pady=5, side="right")
 colorful_scale_label=ttk.Label(right_frame, text="Colorful")
-colorful_scale_label.pack(padx=10, pady=5, side="right")
+colorful_scale_label.pack(padx=10, pady=5, side="top")
+colorful_scale.pack(padx=10, pady=5, side="top")
 
+def scaler_brightness(event):
+    #global file_path, rotation_angle
+    # image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(), canvas.winfo_rooty() + canvas.winfo_height()))
+    # image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
+    global image, photo_image
+    image = Image.open(file_path).rotate(rotation_angle)
+    image = ImageEnhance.Brightness(image).enhance(int(brightness_scale.get()))
+    photo_image = ImageTk.PhotoImage(image)
+    canvas.create_image(0, 0, anchor="nw", image=photo_image)
+
+brightness_scale = ttk.Scale(right_frame, bootstyle="info", length=150, orient="horizontal", from_=0, to=20,command=scaler_brightness)
+
+brightness_scale_label=ttk.Label(right_frame, text="Brightness")
+brightness_scale_label.pack(padx=10, pady=5, side="top")
+brightness_scale.pack(padx=10, pady=5, side="top")
 
 ################################################ Slider
 # from tkinter import *
@@ -118,10 +137,10 @@ def add_filter(filter):
         image = image
     elif filter == "Black and white":
         image = ImageOps.grayscale(image)
-    elif filter == "Colorful":
-        image = ImageEnhance.Contrast(image).enhance(1.7)
-    elif filter == "Brightness":
-        image = ImageEnhance.Brightness(image).enhance(1.7)
+    # elif filter == "Colorful":
+    #     image = ImageEnhance.Contrast(image).enhance(1.7)
+    # elif filter == "Brightness":
+    #     image = ImageEnhance.Brightness(image).enhance(1.7)
     photo_image = ImageTk.PhotoImage(image)
     canvas.create_image(0, 0, anchor="nw", image=photo_image)
 
