@@ -9,7 +9,7 @@ import pygame.camera
 
 root = ttk.Window(themename="cosmo")
 root.title("PhotoEditor")
-root.geometry("600x620")
+root.geometry("700x800")
 root.resizable(1, 1)
 
 Width = 750
@@ -127,8 +127,8 @@ def rotate():
     canvas.create_image(0, 0, anchor="nw", image=photo_image)
 
 
-rotate_button = ttk.Button(right_frame, image=rotate_icon, bootstyle="light", command=rotate)
-rotate_button.pack(pady=5)
+rotate_button = ttk.Button(top_frame, image=rotate_icon, bootstyle="light", command=rotate)
+rotate_button.pack(pady=5, side='left')
 
 def add_filter(filter):
     global image, photo_image
@@ -153,8 +153,8 @@ def change_color():
 
 drawing = (Image.open('drawing_icon.png').resize((800, 800))).save('drawing_icon_resize.png')
 drawing_icon = ttk.PhotoImage(file ='drawing_icon_resize.png').subsample(8, 8)
-drawing_button = ttk.Button(right_frame, image=drawing_icon, bootstyle="light", command=change_color)
-drawing_button.pack(pady=5)
+drawing_button = ttk.Button(top_frame, image=drawing_icon, bootstyle="light", command=change_color)
+drawing_button.pack(pady=5, side='left')
 
 def draw(event):
     global file_path
@@ -174,8 +174,8 @@ def erase_lines():
 
 erase = (Image.open('erase_icon.png').resize((800, 800))).save('erase_icon_resize.png')
 erase_icon = ttk.PhotoImage(file = 'erase_icon_resize.png').subsample(8, 8)
-erase_button = ttk.Button(right_frame, image=erase_icon, bootstyle="light", command = erase_lines)
-erase_button.pack(pady=5)
+erase_button = ttk.Button(top_frame, image=erase_icon, bootstyle="light", command = erase_lines)
+erase_button.pack(pady=5, side='left')
 
 def save_image():
     global file_path, rotation_angle
@@ -199,8 +199,9 @@ def save_image():
 
 saving = (Image.open('save_icon.png').resize((800, 800))).save('save_icon_resize.png')
 save_icon = ttk.PhotoImage(file = 'save_icon_resize.png').subsample(8,8)
-save_button = ttk.Button(right_frame, image=save_icon, bootstyle="light", command=save_image)
-save_button.pack(pady=5)
+save_button = ttk.Button(top_frame, image=save_icon, bootstyle="light", command=save_image)
+save_button.pack(pady=5, side='left')
+
 
 def camera():
     global image, file_path
@@ -222,7 +223,7 @@ def camera():
 photo_img = (Image.open('photo_icon.png').resize((1022, 800))).save('photo_icon_resize.png')
 photo_icon = ttk.PhotoImage(file='photo_icon_resize.png').subsample(8, 8)
 photo_button = ttk.Button(top_frame, image=photo_icon, bootstyle="light", command=camera)
-photo_button.pack(pady=5, side='right')
+photo_button.pack(pady=5, side='left')
 
 
 root.mainloop()
