@@ -5,11 +5,11 @@ from tkinter import colorchooser
 from tkinter.messagebox import askyesno
 import pygame
 import pygame.camera
-
+from PIL.ImageFilter import (BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, EDGE_ENHANCE_MORE,EMBOSS, FIND_EDGES, SMOOTH, SMOOTH_MORE, SHARPEN)
 
 root = ttk.Window(themename="cosmo")
 root.title("PhotoEditor")
-root.geometry("700x800")
+root.geometry("1200x800")
 root.resizable(1, 1)
 
 Width = 750
@@ -30,7 +30,7 @@ right_frame.pack(side="right", fill="y")
 canvas = ttk.Canvas(root, width=Width, height=Height)
 canvas.pack()
 
-image_filters = ["None", "Black and white", "Colorful", "Brightness"]
+image_filters = ["None", "Black and white", "Colorful", "Brightness", "Sketch", "Blur", "Edge Enhance", "Emboss", "Find Edges", "Sharpen"]
 filter_combobox = ttk.Combobox(top_frame, values=image_filters, width=15)
 filter_combobox.pack(padx=10, pady=5, side="right")
 filter_label = ttk.Label(top_frame, text="Select Filter:", background="white")
@@ -47,7 +47,7 @@ def scaler(event):
     photo_image = ImageTk.PhotoImage(image)
     canvas.create_image(0, 0, anchor="nw", image=photo_image)
 
-colorful_scale = ttk.Scale(right_frame, bootstyle="info", length=150, orient="horizontal", from_=0, to=20,command=scaler)
+colorful_scale = ttk.Scale(right_frame, bootstyle="info", length=150, orient="horizontal", from_=1, to=40,command=scaler)
 colorful_scale_label=ttk.Label(right_frame, text="Colorful")
 colorful_scale_label.pack(padx=10, pady=5, side="top")
 colorful_scale.pack(padx=10, pady=5, side="top")
@@ -62,33 +62,14 @@ def scaler_brightness(event):
     photo_image = ImageTk.PhotoImage(image)
     canvas.create_image(0, 0, anchor="nw", image=photo_image)
 
-brightness_scale = ttk.Scale(right_frame, bootstyle="info", length=150, orient="horizontal", from_=0, to=20,command=scaler_brightness)
+
+variable_brightness = 0;
+brightness_scale = ttk.Scale(right_frame, variable= variable_brightness, bootstyle="info", length=150, orient="horizontal", from_=1, to=20,command=scaler_brightness)
 
 brightness_scale_label=ttk.Label(right_frame, text="Brightness")
 brightness_scale_label.pack(padx=10, pady=5, side="top")
 brightness_scale.pack(padx=10, pady=5, side="top")
 
-################################################ Slider
-# from tkinter import *
-#
-# def colorful():
-#     global image, photo_image
-#     image = Image.open(file_path).rotate(rotation_angle)
-#     image = ImageEnhance.Contrast(image).enhance(colorful_slider.get())
-#
-#
-# root = Tk()
-# colorful_slider = Scale(root, from_=0, to=42, tickinterval=8)
-# colorful_slider.set(19)
-# colorful_slider.pack()
-
-
-
-
-
-
-
-######################################################
 
 
 
@@ -137,10 +118,18 @@ def add_filter(filter):
         image = image
     elif filter == "Black and white":
         image = ImageOps.grayscale(image)
-    # elif filter == "Colorful":
-    #     image = ImageEnhance.Contrast(image).enhance(1.7)
-    # elif filter == "Brightness":
-    #     image = ImageEnhance.Brightness(image).enhance(1.7)
+    elif filter == "Sketch":
+         image = image.filter(CONTOUR)
+    elif filter == "Blur":
+         image = image.filter(BLUR)
+    elif filter == "Edge Enhance":
+        image = image.filter(EDGE_ENHANCE)
+    elif filter == "Emboss":
+        image = image.filter(EMBOSS)
+    elif filter == "Find Edges":
+        image = image.filter(FIND_EDGES)
+    elif filter == "Sharpen":
+        image = image.filter(SHARPEN)
     photo_image = ImageTk.PhotoImage(image)
     canvas.create_image(0, 0, anchor="nw", image=photo_image)
 
