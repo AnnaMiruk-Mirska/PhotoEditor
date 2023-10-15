@@ -2,10 +2,9 @@ import ttkbootstrap as ttk
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageEnhance, ImageOps, ImageGrab
 from tkinter import colorchooser
-from tkinter.messagebox import askyesno
 import pygame
 import pygame.camera
-from PIL.ImageFilter import (BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, EDGE_ENHANCE_MORE,EMBOSS, FIND_EDGES, SMOOTH, SMOOTH_MORE, SHARPEN)
+from PIL.ImageFilter import (BLUR, CONTOUR, EDGE_ENHANCE, EMBOSS, FIND_EDGES, SHARPEN)
 
 root = ttk.Window(themename="cosmo")
 root.title("PhotoEditor")
@@ -38,9 +37,6 @@ filter_label.pack(padx=10, pady=2, side="right")
 
 
 def scaler(event):
-    #global file_path, rotation_angle
-    # image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(), canvas.winfo_rooty() + canvas.winfo_height()))
-    # image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
     global image, photo_image
     image = Image.open(file_path).rotate(rotation_angle)
     image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
@@ -53,9 +49,6 @@ colorful_scale_label.pack(padx=10, pady=5, side="top")
 colorful_scale.pack(padx=10, pady=5, side="top")
 
 def scaler_brightness(event):
-    #global file_path, rotation_angle
-    # image = ImageGrab.grab(bbox=(canvas.winfo_rootx(), canvas.winfo_rooty(), canvas.winfo_rootx() + canvas.winfo_width(), canvas.winfo_rooty() + canvas.winfo_height()))
-    # image = ImageEnhance.Contrast(image).enhance(int(colorful_scale.get()))
     global image, photo_image
     image = Image.open(file_path).rotate(rotation_angle)
     image = ImageEnhance.Brightness(image).enhance(int(brightness_scale.get()))
